@@ -1,54 +1,72 @@
-CREATE TABLE productos (
-  IdProducto int identity,
-  nombre varchar(32),
-  PRIMARY KEY (IdProducto)
+CREATE TABLE ciudad (
+    idCiudad int identity,
+    nombre varchar(32)
+    PRIMARY KEY (idCiudad)
+);
+
+CREATE TABLE producto (
+    idProducto int identity,
+    nombre varchar(32),
+    PRIMARY KEY (idProducto)
 );
 
 CREATE TABLE calle (
-  IdCalle int identity,
-  Numero varchar(32),
-  ubicacion geometry,
-  PRIMARY KEY (IdCalle)
+    idCalle int identity,
+    idCiudad int,
+    Numero varchar(32),
+    ubicacion geometry,
+    PRIMARY KEY (idCalle),
+    CONSTRAINT FK_CalleIdCiudad
+    FOREIGN KEY (idCiudad)
+    REFERENCES ciudad(idCiudad),
 );
 
 CREATE TABLE tipoComercio (
-  IdTipoComercio int identity,
-  nombre varchar(32),
-  horario_apertura Time,
-  horario_cierre Time,
-  PRIMARY KEY (IdTipoComercio)
+    idTipoComercio int identity,
+    nombre varchar(32),
+    horario_apertura Time,
+    horario_cierre Time,
+    PRIMARY KEY (idTipoComercio)
 );
 
-CREATE TABLE comercios (
-  IdComercio int identity,
-  IdTipo int,
-  nombre varchar(32),
-  numero varchar(32),
-  ubicacion geometry,
-  PRIMARY KEY (IdComercio),
+CREATE TABLE comercio (
+    idComercio int identity,
+    idTipo int,
+    idCiudad int,
+    nombre varchar(32),
+    numero varchar(32),
+    ubicacion geometry,
+    PRIMARY KEY (idComercio),
+    CONSTRAINT FK_ComercioIdCiudad
+    FOREIGN KEY (idCiudad)
+    REFERENCES ciudad(idCiudad),
 
-  CONSTRAINT FK_ComerciosIdTipo
-  FOREIGN KEY (IdTipo)
-  REFERENCES tipoComercio(IdTipoComercio)
+    CONSTRAINT FK_ComerciosIdTipo
+    FOREIGN KEY (idTipo)
+    REFERENCES tipoComercio(idTipoComercio)
 );
 
-CREATE TABLE casas (
-  IdCasa int identity,
-  numero varchar(32),
-  ubicacion geometry,
-  PRIMARY KEY (IdCasa)
+CREATE TABLE casa (
+    idCasa int identity,
+    idCiudad int,
+    numero varchar(32),
+    ubicacion geometry,
+    PRIMARY KEY (idCasa),
+    CONSTRAINT FK_CasaIdCiudad
+    FOREIGN KEY (idCiudad)
+    REFERENCES ciudad(idCiudad),
 );
 
 CREATE TABLE inventario (
-  IdComercio int,
-  IdProducto int,
-  cantidad int,
-  precio money,
-  CONSTRAINT FK_InventarioIdComercio
-  FOREIGN KEY (IdComercio)
-  REFERENCES comercios(IdComercio),
+    idComercio int,
+    idProducto int,
+    cantidad int,
+    precio money,
+    CONSTRAINT FK_InventarioIdComercio
+    FOREIGN KEY (idComercio)
+    REFERENCES comercio(idComercio),
 
-  CONSTRAINT FK_InventarioIdProducto
-  FOREIGN KEY (IdProducto)
-  REFERENCES productos(IdProducto)
+    CONSTRAINT FK_InventarioIdProducto
+    FOREIGN KEY (idProducto)
+    REFERENCES producto(idProducto)
 );
