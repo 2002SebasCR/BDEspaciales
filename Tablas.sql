@@ -1,27 +1,25 @@
---
-
-CREATE TABLE Productos (
+CREATE TABLE productos (
   IdProducto int identity,
   nombre varchar(32),
   PRIMARY KEY (IdProducto)
 );
 
-CREATE TABLE Calle (
+CREATE TABLE calle (
   IdCalle int identity,
   Numero varchar(32),
   ubicacion geometry,
   PRIMARY KEY (IdCalle)
 );
 
-CREATE TABLE TipoComercio (
+CREATE TABLE tipoComercio (
   IdTipoComercio int identity,
   nombre varchar(32),
-  horario apertura Time,
-  horario cierre Time,
+  horario_apertura Time,
+  horario_cierre Time,
   PRIMARY KEY (IdTipoComercio)
 );
 
-CREATE TABLE Comercios (
+CREATE TABLE comercios (
   IdComercio int identity,
   IdTipo int,
   nombre varchar(32),
@@ -31,27 +29,26 @@ CREATE TABLE Comercios (
 
   CONSTRAINT FK_ComerciosIdTipo
   FOREIGN KEY (IdTipo)
-  REFERENCES TipoComercio(IdTipoComercio)
+  REFERENCES tipoComercio(IdTipoComercio)
 );
 
-CREATE TABLE Casas (
+CREATE TABLE casas (
   IdCasa int identity,
   numero varchar(32),
   ubicacion geometry,
   PRIMARY KEY (IdCasa)
 );
 
-CREATE TABLE Inventario (
+CREATE TABLE inventario (
   IdComercio int,
   IdProducto int,
   cantidad int,
   precio money,
   CONSTRAINT FK_InventarioIdComercio
   FOREIGN KEY (IdComercio)
-  REFERENCES Comercios(IdComercio),
+  REFERENCES comercios(IdComercio),
 
   CONSTRAINT FK_InventarioIdProducto
   FOREIGN KEY (IdProducto)
-  REFERENCES Productos(IdProducto)
+  REFERENCES productos(IdProducto)
 );
-
