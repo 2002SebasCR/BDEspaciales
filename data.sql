@@ -1,6 +1,12 @@
 insert into [dbo].[ciudad](nombre)
 values('CiudadTarea')
 
+--- MANTENER LAS DIMENSIONES DE LAS CASAS Y COMERCIOS EN 1
+--- POLYGON HACE UNA FIGURA CON LOS PUNTOS QUE SE LE DAN
+--- EJEMPLO: 'POLYGON((0 0, 0 1, 1 1, 1 0, 0 0))' - Nota: EL PRIMER Y EL ULTIMO PUNTO DEBEN DE SER EL MISMO
+--- EL PRIMER PUNTO ES EL DE ABAJO A LA IZQUIERDA, EL SEGUNDO ES ARRIBA IZQUIERDA, EL TERCERO ES ARRIBA DERECHA, 
+---     EL CUARTO ES ABAJO DERECHA, EL ULTIMO PUNTO DEBE CALZAR CON EL PRIMERO 
+
 insert into [dbo].[casa](idCiudad, numero, ubicacion)
 values(1, '#21-A', geometry::STGeomFromText('POLYGON((0 0, 0 1, 1 1, 1 0, 0 0))', 4326)),
 	  (1, '#21-B', geometry::STGeomFromText('POLYGON((1 0, 1 1, 2 1, 2 0, 1 0))', 4326)), --- Horizontal
