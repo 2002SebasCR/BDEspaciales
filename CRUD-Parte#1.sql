@@ -1,14 +1,9 @@
 --  CRUD tipo comercio, productos, local
 --  Asignar/consultar horarios
 --  Sebastian Obando Paniagua
-
-
-
 ------------------------------------------------------------------------------------------
 --------------------------------CRUD Tipo de Comercio-------------------------------------
 ------------------------------------------------------------------------------------------
-
-
 CREATE PROCEDURE CRUD_TipoComercio
 	@Id INT,
 	@Nombre VARCHAR(50),
@@ -21,12 +16,15 @@ AS
 	BEGIN 
 		INSERT dbo.tipoComercio VALUES ( @Nombre, @Apertura, @Cierre)
 	END
+	IF @Modo = 'R'
+	BEGIN 
+		SELECT * from dbo.tipoComercio
+	END
 
 	IF @Modo='U'
 	BEGIN 
 		UPDATE dbo.tipoComercio SET   Nombre=@Nombre , horario_apertura = @Apertura, horario_cierre = @Cierre WHERE idTipoComercio=@Id
 	END
-
 	IF @Modo= 'D'
 	BEGIN
 		DELETE FROM dbo.tipoComercio WHERE idTipoComercio=@Id
@@ -41,30 +39,22 @@ BEGIN CATCH  -- statements that handle exception
             ,ERROR_PROCEDURE() AS ErrorProcedure  
             ,ERROR_LINE() AS ErrorLine  
             ,ERROR_MESSAGE() AS ErrorMessage;
-
 END CATCH  
-
 -- Reset identity seed
 	declare @max int
 	select @max=max(idTipoComercio) from dbo.tipoComercio
 	if @max IS NULL   --check when max is returned as null
 	SET @max = 0
 	DBCC CHECKIDENT ('tipoComercio', RESEED, @max)
-
 	GO
 
-	EXECUTE CRUD_TipoComercio @Modo='U', @Id= 6,@Nombre = '#tipo3', @Apertura='07:00:00'  ,@Cierre= '20:00:00'
+
+
+	EXECUTE CRUD_TipoComercio @Modo='R', @Id= 6,@Nombre = '#tipo3', @Apertura='07:00:00'  ,@Cierre= '20:00:00'
 	Select * from dbo.tipoComercio
-
-
-
-
 ------------------------------------------------------------------------------------------
 --------------------------------CRUD Productos--------------------------------------------
 ------------------------------------------------------------------------------------------
-
-
-
 CREATE PROCEDURE CRUD_Producto
 	@Id INT,
 	@Nombre VARCHAR(50),
@@ -75,19 +65,19 @@ AS
 	BEGIN 
 		INSERT dbo.producto VALUES ( @Nombre)
 	END
-
+	IF @Modo = 'R'
+	BEGIN 
+		SELECT * from dbo.producto
+	END
 	IF @Modo='U'
 	BEGIN 
 		UPDATE dbo.producto SET   Nombre=@Nombre WHERE idProducto=@Id
 	END
-
 	IF @Modo= 'D'
 	BEGIN
 		DELETE FROM dbo.producto WHERE idProducto=@Id
 	END;
-
 END TRY  
-
 BEGIN CATCH  -- statements that handle exception
 			 SELECT  
             ERROR_NUMBER() AS ErrorNumber  
@@ -96,29 +86,22 @@ BEGIN CATCH  -- statements that handle exception
             ,ERROR_PROCEDURE() AS ErrorProcedure  
             ,ERROR_LINE() AS ErrorLine  
             ,ERROR_MESSAGE() AS ErrorMessage;
-
 END CATCH  
-
  -- Reset identity seed
 	declare @max int
 	select @max=max(idProducto) from dbo.producto
 	if @max IS NULL   --check when max is returned as null
 	SET @max = 0
 	DBCC CHECKIDENT ('producto', RESEED, @max)
-
 	GO
+
 
 	EXECUTE CRUD_Producto @Modo='I', @Id= 1,@Nombre = 'Atun'
 	Select * from dbo.producto
-
-
-
-
 	
 ------------------------------------------------------------------------------------------
 --------------------------------CRUD Comercios/Locales------------------------------------
 ------------------------------------------------------------------------------------------
-
 
 
 CREATE PROCEDURE CRUD_Comercios
@@ -144,7 +127,10 @@ AS
 		SET @ubicacionGeometry = geometry::STGeomFromText(@Ubicacion, 4326)
 		UPDATE dbo.comercio SET  idTipo=@IdTipo, idCiudad=@IdCiudad ,nombre=@Nombre, numero=@Numero , ubicacion=@ubicacionGeometry WHERE idComercio=@IdComercio
 	END
-
+	IF @Modo = 'R'
+	BEGIN 
+		SELECT * from dbo.comercio
+	END
 	IF @Modo= 'D'
 	BEGIN
 		DELETE FROM dbo.comercio WHERE idComercio=@IdComercio
@@ -172,20 +158,15 @@ END CATCH
 
 	GO
 
-	EXECUTE CRUD_Comercios @Modo='I', @IdComercio= 1 ,@IdTipo=2 , @IdCiudad=1 ,@Nombre='Comercio6', @Numero='#comercio-F' , @Ubicacion = 'POLYGON((0 6, 0 7, 1 7, 1 6, 0 6))'
+	EXECUTE CRUD_Comercios @Modo='R', @IdComercio= 1 ,@IdTipo=2 , @IdCiudad=1 ,@Nombre='Comercio6', @Numero='#comercio-F' , @Ubicacion = 'POLYGON((0 6, 0 7, 1 7, 1 6, 0 6))'
 	Select * from dbo.comercio
 
 
+
 -- duda sobre como insertar la ubicacion como geometry::STGeomFromText**
-
-
-
-
 ------------------------------------------------------------------------------------------
 ---------------------------- Asignar/consultar horarios-----------------------------------
 ------------------------------------------------------------------------------------------
-
-
 CREATE PROCEDURE Consultar_Asignar_Horarios
 	@IdComercio INT,
 	@IdTipo INT,
@@ -200,7 +181,6 @@ AS
 				ON comercio.idTipo = tipoComercio.idTipoComercio
 		WHERE comercio.idComercio = @IdComercio
 	END
-
 	IF @Modo='A' -- assign a schedule
 	BEGIN 
 		UPDATE dbo.comercio SET idTipo = @IdTipo  
@@ -211,9 +191,7 @@ AS
 					ON comercio.idTipo = tipoComercio.idTipoComercio
 						WHERE comercio.idComercio = @IdComercio
 	END;
-
 END TRY  
-
 BEGIN CATCH  -- statements that handle exception
 			 SELECT  
             ERROR_NUMBER() AS ErrorNumber  
@@ -222,14 +200,10 @@ BEGIN CATCH  -- statements that handle exception
             ,ERROR_PROCEDURE() AS ErrorProcedure  
             ,ERROR_LINE() AS ErrorLine  
             ,ERROR_MESSAGE() AS ErrorMessage;
-
 END CATCH  
-
 	GO
-
-
 	-- If set to mode C, it queries, and in mode A, it assigns a schedule.
-	EXECUTE Consultar_Asignar_Horarios @Modo='A', @IdComercio= 1,@IdTipo=3 
+	EXECUTE Consultar_Asignar_Horarios @Modo='C', @IdComercio= 1,@IdTipo=3 
 	
 
 	
