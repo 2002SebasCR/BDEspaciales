@@ -127,18 +127,22 @@ CREATE PROCEDURE CRUD_Comercios
 	@IdCiudad INT,
 	@Nombre VARCHAR(32),
 	@Numero VARCHAR(32),
-	@Ubicacion GEOMETRY, 
+	@Ubicacion VARCHAR(55), 
 	@Modo CHAR(1)
 AS
   BEGIN TRY   -- statements that may cause exceptions
+	DECLARE @ubicacionGeometry GEOMETRY
+	
 	IF @Modo = 'I'
-	BEGIN 
-		INSERT dbo.comercio VALUES (@IdTipo, @IdCiudad, @Nombre, @Numero, @Ubicacion)
+	BEGIN
+		SET @ubicacionGeometry = geometry::STGeomFromText(@Ubicacion, 4326)
+		INSERT dbo.comercio VALUES (@IdTipo, @IdCiudad, @Nombre, @Numero, @ubicacionGeometry)
 	END
 
 	IF @Modo='U'
-	BEGIN 
-		UPDATE dbo.comercio SET  idTipo=@IdTipo, idCiudad=@IdCiudad ,nombre=@Nombre, numero=@Numero , ubicacion=@Ubicacion WHERE idComercio=@IdComercio
+	BEGIN
+		SET @ubicacionGeometry = geometry::STGeomFromText(@Ubicacion, 4326)
+		UPDATE dbo.comercio SET  idTipo=@IdTipo, idCiudad=@IdCiudad ,nombre=@Nombre, numero=@Numero , ubicacion=@ubicacionGeometry WHERE idComercio=@IdComercio
 	END
 
 	IF @Modo= 'D'
@@ -168,7 +172,7 @@ END CATCH
 
 	GO
 
-	EXECUTE CRUD_Producto @Modo='I', @IdComercio= 1 ,@IdTipo=2 , @IdCiudad=1 ,@Nombre='Comercio6', @Numero='#comercio-F' ,@Ubicacion = geometry::STGeomFromText('POLYGON((0 6, 0 7, 1 7, 1 6, 0 6))', 4326)
+	EXECUTE CRUD_Comercios @Modo='I', @IdComercio= 1 ,@IdTipo=2 , @IdCiudad=1 ,@Nombre='Comercio6', @Numero='#comercio-F' , @Ubicacion = 'POLYGON((0 6, 0 7, 1 7, 1 6, 0 6))'
 	Select * from dbo.comercio
 
 
