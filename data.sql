@@ -31,6 +31,23 @@ values(1, 1, 'Comercio1', '#comercio-A', geometry::STGeomFromText('POLYGON((0 1,
 	  (2, 1, 'Comercio4', '#comercio-D', geometry::STGeomFromText('POLYGON((0 4, 0 5, 1 5, 1 4, 0 4))', 4326)),
 	  (2, 1, 'Comercio5', '#comercio-E', geometry::STGeomFromText('POLYGON((0 5, 0 6, 1 6, 1 5, 0 5))', 4326))
 
+
+insert into dbo.producto(nombre)
+values('Carne'),
+	  ('Paracetamol'),
+	  ('Pan')
+
+insert into dbo.inventario (idComercio,idProducto,cantidad,precio)
+values(1,1,10,5000),
+	  (2,2,5,100),
+	  (3,3,0,1000),
+	  (4,1,8,8000),
+	  (5,2,10,50)
+
+update tipoComercio
+set horario_apertura= '07:00:00',
+	horario_cierre= '20:00:00'
+
 SELECT l.ubicacion.STUnion(c.ubicacion.STUnion(ca.ubicacion)) AS UnionT
 FROM [dbo].[casa] as c
 inner join [dbo].[calle] as ca on c.idCiudad = ca.idCiudad
