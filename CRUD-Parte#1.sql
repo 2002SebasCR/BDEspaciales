@@ -50,7 +50,7 @@ END CATCH
 
 
 
-	EXECUTE CRUD_TipoComercio @Modo='R', @Id= 6,@Nombre = '#tipo3', @Apertura='07:00:00'  ,@Cierre= '20:00:00'
+	EXECUTE CRUD_TipoComercio @Modo='I', @Id= 6,@Nombre = '#tipo3', @Apertura='07:00:00'  ,@Cierre= '20:00:00'
 	Select * from dbo.tipoComercio
 ------------------------------------------------------------------------------------------
 --------------------------------CRUD Productos--------------------------------------------

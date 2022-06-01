@@ -89,5 +89,5 @@ END CATCH
 
 
 EXECUTE BuscarDisponibles @IdCasa = 3,@IdProducto = 1,@Hora = '08:00:00' 
-EXECUTE BuscarDisponibles @IdCasa = 3,@IdProducto = 3,@Hora = '08:00:00' 
+EXECUTE BuscarDisponibles @IdCasa = 3,@IdProducto = 2,@Hora = '08:00:00' 
 EXECUTE BuscarDisponibles @IdCasa = 3,@IdProducto = 3,@Hora = '06:00:00' 
